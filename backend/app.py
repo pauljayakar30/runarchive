@@ -3,6 +3,8 @@ from fastapi.responses import RedirectResponse
 
 from backend.strava import AUTH_URL, exchange_code_for_token
 
+from backend.crud import save_activities
+
 from backend.strava import (
     AUTH_URL,
     exchange_code_for_token,
@@ -33,4 +35,9 @@ def callback(code: str):
 
     activities = get_activities(access_token)
 
-    return activities[:5]
+    save_activities(activities)
+
+    return {
+        "message": "Activities synced",
+        "count": len(activities)
+    }
