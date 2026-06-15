@@ -39,3 +39,19 @@ def get_activities(access_token: str):
     )
 
     return response.json()
+
+def refresh_access_token(
+    refresh_token
+):
+
+    response = requests.post(
+        "https://www.strava.com/oauth/token",
+        data={
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token
+        }
+    )
+
+    return response.json()

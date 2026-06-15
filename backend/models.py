@@ -32,3 +32,22 @@ class Activity(Base):
     elevation_gain = Column(Float)
 
     raw_json = Column(Text)
+
+class Athlete(Base):
+    __tablename__ = "athletes"
+
+    id = Column(
+        Integer,
+        primary_key=True
+    )
+
+    strava_id = Column(
+        Integer,
+        unique=True
+    )
+
+    access_token = Column(Text)
+
+    refresh_token = Column(Text)
+
+    expires_at = Column(Integer)

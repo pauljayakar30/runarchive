@@ -37,10 +37,12 @@
 {{ total_time_hours }} hours
 </p>
 
+{% if distance_change_percent %}
 <p>
 <strong>Distance Change:</strong>
 {{ distance_change_percent }}%
 </p>
+{% endif %}
 
 <hr>
 

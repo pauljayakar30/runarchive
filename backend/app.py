@@ -37,6 +37,19 @@ from backend.reports.email import (
     generate_monthly_email
 )
 
+from backend.crud_athlete import save_athlete
+
+from backend.services.token_service import (
+    get_valid_access_token
+)
+
+from backend.strava import get_activities
+from backend.crud import save_activities
+from fastapi.responses import HTMLResponse
+from backend.services.report_service import (
+    generate_monthly_html
+)
+
 app = FastAPI(
     title="RunArchive",
     version="0.1.0"
@@ -55,7 +68,10 @@ def connect_strava():
 
 @app.get("/callback")
 def callback(code: str):
+
     token_data = exchange_code_for_token(code)
+
+    save_athlete(token_data)
 
     access_token = token_data["access_token"]
 
@@ -135,4 +151,39 @@ def monthly_email(
         month,
         previous_year,
         previous_month
+    )
+
+@app.post("/sync")
+def sync_activities():
+
+    token = get_valid_access_token()
+
+    activities = get_activities(token)
+
+    save_activities(activities)
+
+    return {
+        "message": "Sync completed",
+        "count": len(activities)
+    }
+
+@app.get("/health")
+def health():
+
+    return {
+        "status": "healthy"
+    }
+
+@app.get(
+    "/report-preview/{year}/{month}",
+    response_class=HTMLResponse
+)
+def report_preview(
+    year: int,
+    month: int
+):
+
+    return generate_monthly_html(
+        year,
+        month
     )
