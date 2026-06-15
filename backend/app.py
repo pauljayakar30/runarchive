@@ -33,6 +33,10 @@ from backend.reports.insights import (
     compare_months
 )
 
+from backend.reports.email import (
+    generate_monthly_email
+)
+
 app = FastAPI(
     title="RunArchive",
     version="0.1.0"
@@ -112,4 +116,23 @@ def compare_report(
         month1,
         year2,
         month2
+    )
+
+@app.get(
+    "/reports/email/"
+    "{year}/{month}/"
+    "{previous_year}/{previous_month}"
+)
+def monthly_email(
+    year: int,
+    month: int,
+    previous_year: int,
+    previous_month: int
+):
+
+    return generate_monthly_email(
+        year,
+        month,
+        previous_year,
+        previous_month
     )
