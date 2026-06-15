@@ -21,6 +21,10 @@ from backend.analytics.weekly import (
     get_weekly_summary
 )
 
+from backend.reports.daily import (
+    get_daily_report
+)
+
 app = FastAPI(
     title="RunArchive",
     version="0.1.0"
@@ -63,3 +67,10 @@ def monthly_summary():
 @app.get("/analytics/weekly")
 def weekly_summary():
     return get_weekly_summary()
+
+@app.get("/reports/day/{target_date}")
+def daily_report(target_date: str):
+
+    return get_daily_report(
+        target_date
+    )
