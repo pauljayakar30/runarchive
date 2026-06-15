@@ -5,6 +5,8 @@ from backend.strava import AUTH_URL, exchange_code_for_token
 
 from backend.crud import save_activities
 
+from backend.analytics import get_summary
+
 from backend.strava import (
     AUTH_URL,
     exchange_code_for_token,
@@ -41,3 +43,7 @@ def callback(code: str):
         "message": "Activities synced",
         "count": len(activities)
     }
+
+@app.get("/analytics/summary")
+def analytics_summary():
+    return get_summary()
