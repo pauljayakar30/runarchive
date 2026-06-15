@@ -25,6 +25,14 @@ from backend.reports.daily import (
     get_daily_report
 )
 
+from backend.reports.monthly import (
+    get_monthly_report
+)
+
+from backend.reports.insights import (
+    compare_months
+)
+
 app = FastAPI(
     title="RunArchive",
     version="0.1.0"
@@ -73,4 +81,35 @@ def daily_report(target_date: str):
 
     return get_daily_report(
         target_date
+    )
+
+@app.get(
+    "/reports/month/{year}/{month}"
+)
+def monthly_report(
+    year: int,
+    month: int
+):
+    return get_monthly_report(
+        year,
+        month
+    )   
+
+@app.get(
+    "/reports/compare/"
+    "{year1}/{month1}/"
+    "{year2}/{month2}"
+)
+def compare_report(
+    year1: int,
+    month1: int,
+    year2: int,
+    month2: int
+):
+
+    return compare_months(
+        year1,
+        month1,
+        year2,
+        month2
     )
