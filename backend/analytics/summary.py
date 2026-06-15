@@ -1,7 +1,6 @@
 from backend.database import SessionLocal
 from backend.models import Activity
 
-
 def get_summary():
     db = SessionLocal()
 
@@ -27,18 +26,9 @@ def get_summary():
 
         return {
             "total_runs": total_runs,
-            "total_distance_km": round(
-                total_distance_m / 1000,
-                2
-            ),
-            "longest_run_km": round(
-                longest_run_m / 1000,
-                2
-            ),
-            "average_run_km": round(
-                avg_distance_m / 1000,
-                2
-            )
+            "total_distance_km": round(total_distance_m / 1000, 2),
+            "longest_run_km": round(longest_run_m / 1000, 2),
+            "average_run_km": round(avg_distance_m / 1000, 2)
         }
 
     finally:

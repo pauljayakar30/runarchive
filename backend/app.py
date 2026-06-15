@@ -5,12 +5,32 @@ from backend.strava import AUTH_URL, exchange_code_for_token
 
 from backend.crud import save_activities
 
-from backend.analytics import get_summary
+from backend.analytics.summary import get_summary
 
 from backend.strava import (
     AUTH_URL,
     exchange_code_for_token,
     get_activities
+)
+
+from backend.analytics.monthly import (
+    get_monthly_summary
+)
+
+from backend.analytics.weekly import (
+    get_weekly_summary
+)
+
+from backend.reports.daily import (
+    get_daily_report
+)
+
+from backend.reports.monthly import (
+    get_monthly_report
+)
+
+from backend.reports.insights import (
+    compare_months
 )
 
 app = FastAPI(
@@ -47,3 +67,49 @@ def callback(code: str):
 @app.get("/analytics/summary")
 def analytics_summary():
     return get_summary()
+
+@app.get("/analytics/monthly")
+def monthly_summary():
+    return get_monthly_summary()
+
+@app.get("/analytics/weekly")
+def weekly_summary():
+    return get_weekly_summary()
+
+@app.get("/reports/day/{target_date}")
+def daily_report(target_date: str):
+
+    return get_daily_report(
+        target_date
+    )
+
+@app.get(
+    "/reports/month/{year}/{month}"
+)
+def monthly_report(
+    year: int,
+    month: int
+):
+    return get_monthly_report(
+        year,
+        month
+    )   
+
+@app.get(
+    "/reports/compare/"
+    "{year1}/{month1}/"
+    "{year2}/{month2}"
+)
+def compare_report(
+    year1: int,
+    month1: int,
+    year2: int,
+    month2: int
+):
+
+    return compare_months(
+        year1,
+        month1,
+        year2,
+        month2
+    )
