@@ -5,12 +5,20 @@ from backend.strava import AUTH_URL, exchange_code_for_token
 
 from backend.crud import save_activities
 
-from backend.analytics import get_summary
+from backend.analytics.summary import get_summary
 
 from backend.strava import (
     AUTH_URL,
     exchange_code_for_token,
     get_activities
+)
+
+from backend.analytics.monthly import (
+    get_monthly_summary
+)
+
+from backend.analytics.weekly import (
+    get_weekly_summary
 )
 
 app = FastAPI(
@@ -47,3 +55,11 @@ def callback(code: str):
 @app.get("/analytics/summary")
 def analytics_summary():
     return get_summary()
+
+@app.get("/analytics/monthly")
+def monthly_summary():
+    return get_monthly_summary()
+
+@app.get("/analytics/weekly")
+def weekly_summary():
+    return get_weekly_summary()
