@@ -7,7 +7,6 @@ def compare_months(
     previous_year: int,
     previous_month: int
 ):
-
     current = get_monthly_report(
         current_year,
         current_month
@@ -29,11 +28,8 @@ def compare_months(
     )
 
     if previous_distance == 0:
-
         improvement = None
-
     else:
-
         improvement = round(
             (
                 (
