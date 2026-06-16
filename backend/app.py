@@ -1,12 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-
-from backend.strava import AUTH_URL, exchange_code_for_token
-
 from backend.crud import save_activities
-
 from backend.analytics.summary import get_summary
-
 from backend.strava import (
     AUTH_URL,
     exchange_code_for_token,
@@ -29,7 +24,7 @@ from backend.reports.monthly import (
     get_monthly_report
 )
 
-from backend.reports.insights import (
+from backend.reports.comparison import (
     compare_months
 )
 
@@ -37,10 +32,31 @@ from backend.analytics.dashboard import (
     get_dashboard
 )
 
+from backend.crud_athlete import save_athlete
+
+from backend.services.token_service import (
+    get_valid_access_token
+)
+
+import os
+
+from backend.database import SessionLocal
+from backend.models import Activity, Athlete
+
+from backend.services.scheduler import (
+    scheduler
+)
+
+from backend.services.telegram_service import (
+    send_telegram_message
+)
+
+from backend.services.telegram_report_job import (
+    monthly_report_job
+)
 
 app = FastAPI(
-    title="RunArchive",
-    version="0.1.0"
+    title="RunArchive"
 )
 
 @app.get("/")
@@ -56,7 +72,10 @@ def connect_strava():
 
 @app.get("/callback")
 def callback(code: str):
+
     token_data = exchange_code_for_token(code)
+
+    save_athlete(token_data)
 
     access_token = token_data["access_token"]
 
@@ -105,8 +124,38 @@ def monthly_report(
     "{year1}/{month1}/"
     "{year2}/{month2}"
 )
+def compare_report(
+    year1: int,
+    month1: int,
+    year2: int,
+    month2: int
+):
+    return compare_months(
+        year1,
+        month1,
+        year2,
+        month2
+    )
+
+@app.get("/dashboard")
+def dashboard():
 
 @app.get("/dashboard")
 def dashboard():
 
     return get_dashboard()
+
+
+@app.post("/sync")
+def sync_activities():
+
+    token = get_valid_access_token()
+
+    activities = get_activities(token)
+
+    save_activities(activities)
+
+    return {
+        "message": "Sync completed",
+        "count": len(activities)
+    }

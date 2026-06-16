@@ -46,6 +46,7 @@ class Athlete(Base):
         unique=True
     )
 
+<<<<<<< HEAD
     access_token = Column(
         String
     )
@@ -57,3 +58,10 @@ class Athlete(Base):
     expires_at = Column(
         Integer
     )
+=======
+    access_token = Column(Text)
+
+    refresh_token = Column(Text)
+
+    expires_at = Column(Integer)
+>>>>>>> feature/automation
