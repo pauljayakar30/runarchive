@@ -33,9 +33,10 @@ from backend.reports.insights import (
     compare_months
 )
 
-from backend.reports.email import (
-    generate_monthly_email
+from backend.analytics.dashboard import (
+    get_dashboard
 )
+
 
 app = FastAPI(
     title="RunArchive",
@@ -104,35 +105,8 @@ def monthly_report(
     "{year1}/{month1}/"
     "{year2}/{month2}"
 )
-def compare_report(
-    year1: int,
-    month1: int,
-    year2: int,
-    month2: int
-):
 
-    return compare_months(
-        year1,
-        month1,
-        year2,
-        month2
-    )
+@app.get("/dashboard")
+def dashboard():
 
-@app.get(
-    "/reports/email/"
-    "{year}/{month}/"
-    "{previous_year}/{previous_month}"
-)
-def monthly_email(
-    year: int,
-    month: int,
-    previous_year: int,
-    previous_month: int
-):
-
-    return generate_monthly_email(
-        year,
-        month,
-        previous_year,
-        previous_month
-    )
+    return get_dashboard()
