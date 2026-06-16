@@ -46,19 +46,6 @@ class Athlete(Base):
         unique=True
     )
 
-class Athlete(Base):
-    __tablename__ = "athletes"
-
-    id = Column(
-        Integer,
-        primary_key=True
-    )
-
-    strava_id = Column(
-        Integer,
-        unique=True
-    )
-
     access_token = Column(Text)
 
     refresh_token = Column(Text)

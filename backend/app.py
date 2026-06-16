@@ -140,9 +140,6 @@ def compare_report(
 @app.get("/dashboard")
 def dashboard():
 
-@app.get("/dashboard")
-def dashboard():
-
     return get_dashboard()
 
 
@@ -158,4 +155,102 @@ def sync_activities():
     return {
         "message": "Sync completed",
         "count": len(activities)
+    }
+
+@app.get("/health")
+def health():
+
+    return {
+        "status": "healthy"
+    }
+
+
+@app.get("/stats")
+def stats():
+
+    db = SessionLocal()
+
+    try:
+
+        activity_count = db.query(Activity).count()
+
+        athlete_count = db.query(Athlete).count()
+
+        db_size_kb = round(
+            os.path.getsize(
+                "data/runarchive.db"
+            ) / 1024,
+            2
+        )
+
+        latest_activity = (
+            db.query(Activity)
+            .order_by(Activity.date.desc())
+            .first()
+        )
+
+        return {
+            "athletes": athlete_count,
+            "activities": activity_count,
+            "database_size_kb": db_size_kb,
+            "latest_activity":
+                latest_activity.date
+                if latest_activity
+                else None
+        }
+
+    finally:
+
+        db.close()
+
+
+@app.on_event("startup")
+def startup():
+
+    scheduler.start()
+
+    print(
+        "Scheduler started"
+    )
+
+
+@app.post("/test-telegram")
+def test_telegram():
+
+    report = get_monthly_report(
+        2026,
+        4
+    )
+
+    message = f"""
+🏃 RunArchive Monthly Summary
+
+Month: {report['month']}
+
+Runs: {report['total_runs']}
+Distance: {report['total_distance_km']} km
+
+Average Run: {report['average_run_km']} km
+Longest Run: {report['longest_run_km']} km
+
+Training Time: {report['total_time_hours']} hrs
+
+Keep showing up.
+Progress compounds.
+"""
+
+    send_telegram_message(message)
+
+    return {
+        "message": "Telegram sent"
+    }
+
+
+@app.post("/send-monthly-report")
+def send_monthly_report():
+
+    monthly_report_job()
+
+    return {
+        "message": "Monthly report sent"
     }
