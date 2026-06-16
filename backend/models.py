@@ -46,22 +46,21 @@ class Athlete(Base):
         unique=True
     )
 
-<<<<<<< HEAD
-    access_token = Column(
-        String
+class Athlete(Base):
+    __tablename__ = "athletes"
+
+    id = Column(
+        Integer,
+        primary_key=True
     )
 
-    refresh_token = Column(
-        String
+    strava_id = Column(
+        Integer,
+        unique=True
     )
 
-    expires_at = Column(
-        Integer
-    )
-=======
     access_token = Column(Text)
 
     refresh_token = Column(Text)
 
     expires_at = Column(Integer)
->>>>>>> feature/automation
