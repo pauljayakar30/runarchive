@@ -1,6 +1,6 @@
 from backend.analytics.summary import get_summary
 from backend.analytics.monthly import get_monthly_summary
-
+from backend.analytics.streak import get_streak
 from backend.database import SessionLocal
 from backend.models import Activity, Athlete
 
@@ -26,7 +26,7 @@ def get_dashboard():
             )
             .first()
         )
-
+        streak = get_streak()
         return {
             "summary": get_summary(),
             "monthly": get_monthly_summary(),
@@ -35,7 +35,11 @@ def get_dashboard():
             "latest_activity":
                 latest_activity.date
                 if latest_activity
-                else None
+                else None,
+            "current_streak_days":
+                streak["current_streak_days"],
+            "longest_streak_days":
+                streak["longest_streak_days"]
         }
 
     finally:

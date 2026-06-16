@@ -51,6 +51,11 @@ from backend.services.telegram_service import (
     send_telegram_message
 )
 
+from backend.analytics.streak import (
+    get_streak
+)
+
+
 from backend.services.telegram_report_job import (
     monthly_report_job
 )
@@ -254,3 +259,8 @@ def send_monthly_report():
     return {
         "message": "Monthly report sent"
     }
+
+@app.get("/analytics/streak")
+def streak():
+
+    return get_streak()
